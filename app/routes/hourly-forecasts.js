@@ -1,7 +1,10 @@
 import Route from '@ember/routing/route';
 
 export default Route.extend({
-    model() {
-        return this.store.findAll('hourly-forecast');
+    async model() {
+        const forecasts = await this.store.findAll('hourly-forecast');
+        const analysisRuns = await this.store.findAll('analysis-run');
+
+        return { forecasts, analysisRuns };
     },
 });

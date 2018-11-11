@@ -24,7 +24,7 @@ export default Factory.extend({
         return `${65 + i}°F`;
     },
 
-    status() {
+    description() {
         return 'sunny';
     },
 
