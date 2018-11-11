@@ -1,4 +1,4 @@
-import { Factory } from 'ember-cli-mirage';
+import { Factory, faker } from 'ember-cli-mirage';
 
 export default Factory.extend({
     id(i) {
@@ -18,5 +18,17 @@ export default Factory.extend({
     endingAt() {
         const oneHour = 3600000;
         return new Date(this.startingAt.valueOf() + oneHour);
+    },
+
+    temperature(i) {
+        return `${65 + i}°F`;
+    },
+
+    status() {
+        return 'sunny';
+    },
+
+    city() {
+        return faker.address.city();
     },
 });

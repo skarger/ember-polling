@@ -1,0 +1,8 @@
+.forecast {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.forecast-item {
+    width: 120px;
+}

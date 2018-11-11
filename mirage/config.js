@@ -24,7 +24,7 @@ export default function() {
     http://www.ember-cli-mirage.com/docs/v0.3.x/shorthands/
   */
 
-  this.get('/hourly_forecasts', (schema, request) => {
+  this.get('/hourly-forecasts', (schema) => {
     return schema.hourlyForecasts.all();
   });
 }

@@ -20,8 +20,8 @@ Therefore we need the hourly forecasts page to poll. When a user first views thi
 
 The route in question is `/hourly-forecasts`. The page fetches data from two distinct endpoints:
 
-* `/api/hourly_forecasts`
-* `/api/analysis_runs`
+* `/api/hourly-forecasts`
+* `/api/analysis-runs`
 
 ### Testing
 
