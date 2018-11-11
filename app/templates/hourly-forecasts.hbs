@@ -1,10 +1,10 @@
 <h1>Hourly Forecasts</h1>
 <ul>
   {{#each sortedForecasts as |forecast|}}
-    <li class='forecast'>
-        <span class='forecast-item'>{{forecast.city}}</span>
-        <span class='forecast-item'>{{moment-format forecast.startingAt 'MM/DD h A'}}</span>
-        <span class='forecast-item'>{{forecast.temperature}} {{forecast.description}}</span>
+    <li class="forecast">
+      <span class="forecast-item">{{forecast.city}}</span>
+      <span class="forecast-item">{{moment-format forecast.startingAt "MM/DD h A"}}</span>
+      <span class="forecast-item">{{forecast.temperature}} {{forecast.description}}</span>
     </li>
   {{/each}}
 </ul>
