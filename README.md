@@ -1,7 +1,35 @@
 # ember-polling
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+## Overview
+This app exists to demonstrate automated testing of HTTP polling functionality.
+
+It incorporates a couple key libraries:
+
+* [ember-concurrency](http://ember-concurrency.com/docs/introduction/) to help manage the polling
+* [ember-cli-mirage](http://www.ember-cli-mirage.com/) to help with acceptance testing
+
+### Example Domain
+
+The example app displays weather information. We have a route that shows hourly weather forecasts. When users visit that page, the route model fetches the existing forecasts from the server and displays them in rows.
+
+In the background, the server continually ingests large amounts of weather data and analyzes it in batch runs. These analysis runs compute various different metrics, including hourly forecasts. Reasons other than direct user interaction on the hourly forecasts page prompt analysis runs. For example, the server may kick off an analysis run because it just received a certain kind of data, or because it reached a scheduled time, or because another user manually started an analysis from a different page.
+
+Therefore we need the hourly forecasts page to poll. When a user first views this page, the app should check if there are any in-progress analysis runs. If there are, it should show an indicator so that the user knows that new forecasts may appear soon. After initial load it should poll for active analysis runs. When runs become finalized the page should remove the indicator, and automatically refresh in case the server has new forecasts we can display.
+
+### Implementation
+
+The route in question is `/hourly-forecasts`. The page fetches data from two distinct endpoints:
+
+* `/api/hourly_forecasts`
+* `/api/analysis_runs`
+
+### Testing
+
+We want to test this behavior using an acceptance test. In particular we want to verify these details:
+
+* When a user visits the `/hourly-forecasts` page, it shows an indicator conditionally on whether there are active analysis runs.
+* When analysis runs become finalized sometime after the page loads, it should refresh and show new forecasts if present.
+
 
 ## Prerequisites
 
@@ -24,10 +52,6 @@ You will need the following things properly installed on your computer.
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
 ### Running Tests
 
 * `ember test`
@@ -44,14 +68,3 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember build` (development)
 * `ember build --environment production` (production)
 
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
