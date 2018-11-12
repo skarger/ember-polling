@@ -10,7 +10,7 @@ export default create({
 
   header: text('[data-role=page-header]'),
 
-  analysisRuns: text('[data-role=analysis-runs-indicator]'),
+  analysisRunsIndicator: text('[data-role=analysis-runs-indicator]'),
 
   forecastItems: collection("ul[data-role=forecasts] li"),
 });

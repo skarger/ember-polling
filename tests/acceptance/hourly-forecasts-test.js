@@ -26,7 +26,7 @@ module('Acceptance | hourly forecasts', function(hooks) {
 
     await page.visit();
 
-    assert.equal(page.analysisRuns, "");
+    assert.equal(page.analysisRunsIndicator, "");
   });
 
   test('when there are only finalized analysis runs it does not show an indicator', async function(assert) {
@@ -34,7 +34,7 @@ module('Acceptance | hourly forecasts', function(hooks) {
 
     await page.visit();
 
-    assert.equal(page.analysisRuns, "");
+    assert.equal(page.analysisRunsIndicator, "");
   });
 
   test('when there are in-progress analysis runs it shows an indicator', async function(assert) {
@@ -42,6 +42,19 @@ module('Acceptance | hourly forecasts', function(hooks) {
 
     await page.visit();
 
-    assert.equal(page.analysisRuns, "Currently analyzing data");
+    assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
+  });
+
+  test('when all in-progress analysis runs become final it removes the indicator', async function(assert) {
+    const analysisRun = server.create('analysis-run', { status: 'processing' });
+
+    await page.visit();
+
+    assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
+
+    analysisRun.status = "finalized";
+    analysisRun.save();
+
+    assert.equal(page.analysisRunsIndicator, "");
   });
 });

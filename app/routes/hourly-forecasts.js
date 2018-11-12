@@ -9,4 +9,10 @@ export default Route.extend({
 
         return { forecasts, analysisRuns };
     },
+
+    setupController(controller, model) {
+        this._super(...arguments);
+        controller.set('analysisRuns', model.analysisRuns);
+        controller.pollAnalysisRuns.perform();
+    }
 });
