@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
 import { task, timeout } from 'ember-concurrency';
 import Ember from 'ember';
 
@@ -8,9 +9,7 @@ export default Controller.extend({
         return this.get('model.forecasts').sortBy('startingAt');
     }),
 
-    analysisRuns: computed(function() {
-        return [];
-    }),
+    analysisRuns: alias('model.analysisRuns'),
 
     activeAnalysisRuns: computed('analysisRuns', function() {
         return this.get('analysisRuns').filter((run) => { return (run.status === 'processing'); })
