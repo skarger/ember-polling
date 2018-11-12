@@ -3,10 +3,13 @@
 ## Overview
 This app exists to explore HTTP polling in Ember, and automated testing to verify it.
 
-The goal is to develop an approach to polling an API endpoint for updates, with a timeout between each request, and reacting when the response changes in a meaningful way.
-In the basic version polling continues infinitely, but in other use-cases we may want polling to terminate after obtaining some sentinel value.
+A common need is to poll an API endpoint for updates, with a timeout between each API request, and react when the response changes in a meaningful way. In the simplest version polling continues infinitely, but in other use-cases we may want polling to terminate after obtaining some sentinel value. In this example app we want polling to begin after transitioning into a route, and we want the route to refresh when the poller obtains a particular response.
 
-In this example app and in common real-world cases, we want a route to refresh when the poller obtains a particular response. This adds a testing challenge because we wish to `await` the page load when the router refreshes, but unlike standard `page.visit()` in acceptance tests, we do not have direct control over the poll-prompted refresh. The test suite includes a failing acceptance test that suffers from that problem.
+It would be nice to have standard, robust building blocks to handle that situation. Crucially those building blocks should enable automated testing. Naive approaches often run into testing obstacles:
+
+* Tests hang because the Ember run loop never empties (see [detailed example here](https://medium.com/square-corner-blog/the-ember-run-loop-and-asynchronous-testing-c03326181623)).
+* Tests fail because assertions happen before the page updates as a result of poll responses. Unlike standard `page.visit()` in acceptance tests, it is not as straightforward test code to `await` a page load that will be prompted by poll results, so that we can make assertions after that settles.
+
 
 This example app utilizes a few key libraries:
 
