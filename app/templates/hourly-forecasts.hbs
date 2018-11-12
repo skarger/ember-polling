@@ -1,5 +1,6 @@
-<div data-role="header-area">
-  <h1 data-role="page-header">Hourly Forecasts</h1>
+<h1 data-role="page-header">Hourly Forecasts</h1>
+<div>
+  <span data-role="analysis-runs-indicator">{{ analysisRunsIndicator }}</span>
 </div>
 <ul data-role="forecasts">
   {{#each sortedForecasts as |forecast|}}
