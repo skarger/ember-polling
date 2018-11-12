@@ -1,5 +1,7 @@
-<h1>Hourly Forecasts</h1>
-<ul>
+<div data-role="header-area">
+  <h1 data-role="page-header">Hourly Forecasts</h1>
+</div>
+<ul data-role="forecasts">
   {{#each sortedForecasts as |forecast|}}
     <li class="forecast">
       <span class="forecast-item">{{forecast.city}}</span>
