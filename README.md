@@ -3,10 +3,11 @@
 ## Overview
 This app exists to demonstrate automated testing of HTTP polling functionality.
 
-It incorporates a couple key libraries:
+It utilizes a few key libraries:
 
 * [ember-concurrency](http://ember-concurrency.com/docs/introduction/) to help manage the polling
-* [ember-cli-mirage](http://www.ember-cli-mirage.com/) to help with acceptance testing
+* [ember-cli-mirage](http://www.ember-cli-mirage.com/) to provide a fake API for acceptance tests
+* [ember-cli-page-object](http://ember-cli-page-object.js.org/docs/v1.14.x/) to make assertions on page content in acceptance tests
 
 ### Example Domain
 
