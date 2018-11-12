@@ -2,7 +2,9 @@ import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { task, timeout } from 'ember-concurrency';
-import Ember from 'ember';
+import { milestone } from 'ember-milestones';
+
+export const AnalysisTimeout = Symbol('hourly-forecasts#poll-analysis-timeout');
 
 export default Controller.extend({
     sortedForecasts: computed('model.forecasts', function() {
@@ -11,7 +13,7 @@ export default Controller.extend({
 
     analysisRuns: alias('model.analysisRuns'),
 
-    activeAnalysisRuns: computed('analysisRuns', function() {
+    activeAnalysisRuns: computed('analysisRuns.@each.status', function() {
         return this.get('analysisRuns').filter((run) => { return (run.status === 'processing'); })
     }),
 
@@ -21,13 +23,13 @@ export default Controller.extend({
 
     pollAnalysisRuns: task(function*() {
         while (this.activeAnalysisRuns.length) {
-            this.loadAnalysisRuns.perform();
-            if (Ember.testing) { return; }
-            yield timeout(2000);
+            yield milestone(AnalysisTimeout, () => timeout(2000));
+            yield this.loadAnalysisRuns.perform();
         }
-    }).restartable(),
+        this.send('reload');
+    }).drop(),
 
     loadAnalysisRuns: task(function*() {
-        this.set('analysisRuns', yield this.store.findAll('analysis-run'));
+        this.set('analysisRuns', yield this.store.findAll('analysis-run', { reload: true }));
     }).drop(),
 });

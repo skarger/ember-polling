@@ -1,5 +1,8 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
+import { settled } from '@ember/test-helpers';
+import { setupMilestones, advanceTo } from 'ember-milestones';
+import { AnalysisTimeout } from 'ember-polling/controllers/hourly-forecasts';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import page from '../pages/hourly-forecasts';
 
@@ -37,29 +40,37 @@ module('Acceptance | hourly forecasts', function(hooks) {
     assert.equal(page.analysisRunsIndicator, "");
   });
 
-  test('when there are in-progress analysis runs it shows an indicator', async function(assert) {
-    server.create('analysis-run', { status: 'processing' });
+  module('when there are in-progress analysis runs', function(hooks) {
+    setupMilestones(hooks, [AnalysisTimeout]);
 
-    await page.visit();
+    test('it shows an indicator', async function(assert) {
+      server.create('analysis-run', { status: 'processing' });
 
-    assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
-  });
+      await page.visit();
+      await advanceTo(AnalysisTimeout).andCancel();
 
-  test('when all in-progress analysis runs become final it refreshes the page and removes the indicator', async function(assert) {
-    const analysisRun = server.create('analysis-run', { status: 'processing' });
-    server.create('hourly-forecast');
+      assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
+    });
 
-    await page.visit();
+    test('when they become final it refreshes the page and removes the indicator', async function(assert) {
+      const analysisRun = server.create('analysis-run', { status: 'processing' });
+      server.create('hourly-forecast');
 
-    assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
-    assert.equal(page.forecastItems.length, 1);
+      await page.visit();
 
-    analysisRun.status = "finalized";
-    analysisRun.save();
-    // assume that the analysis run produced a new forecast that the page should display
-    server.create('hourly-forecast');
+      assert.equal(page.analysisRunsIndicator, "Currently analyzing data");
+      assert.equal(page.forecastItems.length, 1);
 
-    assert.equal(page.analysisRunsIndicator, "");
-    assert.equal(page.forecastItems.length, 2);
+      analysisRun.status = "finalized";
+      analysisRun.save();
+      // assume that the analysis run produced a new forecast that the page should display
+      server.create('hourly-forecast');
+
+      await advanceTo(AnalysisTimeout).andReturn();
+      await settled();
+
+      assert.equal(page.analysisRunsIndicator, '');
+      assert.equal(page.forecastItems.length, 2);
+    });
   });
 });
