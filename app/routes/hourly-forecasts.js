@@ -3,8 +3,8 @@ import Route from '@ember/routing/route';
 export default Route.extend({
     async model() {
         const [forecasts, analysisRuns] = await Promise.all([
-            this.store.findAll('hourly-forecast'),
-            this.store.findAll('analysis-run'),
+            this.store.findAll('hourly-forecast', { reload: true }),
+            this.store.findAll('analysis-run', { reload: true }),
         ]);
 
         return { forecasts, analysisRuns };
@@ -12,6 +12,15 @@ export default Route.extend({
 
     setupController(controller) {
         this._super(...arguments);
-        controller.pollAnalysisRuns.perform();
+
+        if (controller.activeAnalysisRuns.length) {
+          controller.pollAnalysisRuns.perform();
+        }
+    },
+
+    actions: {
+      reload() {
+        this.refresh();
+      }
     }
 });
