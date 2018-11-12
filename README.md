@@ -1,13 +1,20 @@
 # ember-polling
 
 ## Overview
-This app exists to demonstrate automated testing of HTTP polling functionality.
+This app exists to explore HTTP polling in Ember, and automated testing to verify it.
 
-It utilizes a few key libraries:
+The goal is to develop an approach to polling an API endpoint for updates, with a timeout between each request, and reacting when the response changes in a meaningful way.
+In the basic version polling continues infinitely, but in other use-cases we may want polling to terminate after obtaining some sentinel value.
+
+In this example app and in common real-world cases, we want a route to refresh when the poller obtains a particular response. This adds a testing challenge because we wish to `await` the page load when the router refreshes, but unlike standard `page.visit()` in acceptance tests, we do not have direct control over the poll-prompted refresh. The test suite includes a failing acceptance test that suffers from that problem.
+
+This example app utilizes a few key libraries:
 
 * [ember-concurrency](http://ember-concurrency.com/docs/introduction/) to help manage the polling
 * [ember-cli-mirage](http://www.ember-cli-mirage.com/) to provide a fake API for acceptance tests
 * [ember-cli-page-object](http://ember-cli-page-object.js.org/docs/v1.14.x/) to make assertions on page content in acceptance tests
+
+Any changes to the approach and implementation are welcome, but the acceptance tests should still pass. That said, alternative ways to test that still convincingly verify the behavior are also welcome.
 
 ### Example Domain
 
